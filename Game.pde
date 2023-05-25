@@ -1,84 +1,91 @@
+import java.util.List;
+import java.util.stream.Collectors;
+import ddf.minim.*;
+
+// Instancias dos personagens
 Spaceship spaceship;
 Enemy enemy;
 
-int enemyDamageTime = 0;
-int playerDamageTime = 20;
+// Instancias das telas
+AboutScreen aboutScreen;
+GameScreen gameScreen;
+InitialScreen initialScreen;
+InstructionsScreen instructionsScreen;
+SelectionItensScreen selectionItensScreen;
+
+// Tipos inteiros
 int gameTime = 0;
-
-boolean wPressed, dPressed, sPressed, aPressed = false;
-
-ArrayList < Enemy > enemys = new ArrayList < Enemy > ();
-
+int playerDamageTime = 20;
+int enemyDamageTime = 0;
 int playerLife = 6;
-
-final PVector targetPlayerPos = new PVector();
-
-PImage playerSprite;
-PImage enemySprite;
-PImage backgroundGame;
-
+int backgroundGameX = 0;
+int backgroundGameX2 = 1280;
 int dificuldade = 0;
 int enemyCount = 0;
+int scoreEnemies = 0;
+int selectedSpaceship = 1;
 
+// Tipos booleanos
+boolean aPressed = false;
+boolean dPressed = false;
+boolean sPressed = false;
+boolean wPressed = false;
+
+// Tipos List e ArrayList
+static final List < Bullet > bullets = new ArrayList < > ();
+static final List < Integer > bulletPool = new ArrayList < > ();
+ArrayList < Enemy > enemys = new ArrayList < Enemy > ();
+
+// Tipos PVector
+static final PVector bulletSpd = new PVector();
+final PVector targetPlayerPos = new PVector();
 PVector playerPos1 = new PVector();
 PVector playerPos2 = new PVector();
+
+// Tipos PImage
+PImage backgroundGame;
+PImage enemySprite;
+PImage playerSprite;
+
+// Tipos String
+String activeScreen = "gameScreen";
+
+// Tipos short
+short gunDamage = 10;
 
 void setup() {
   frameRate(60);
   size(1280, 720);
-
+  
   backgroundGame = loadImage("./images/bg_game.png");
+  backgroundGame.resize(1285, 720);
+  
   playerSprite = loadImage("./images/spaceship.png");
   enemySprite = loadImage("./images/enemy.png");
-
+  
   spaceship = new Spaceship(playerSprite, 5);
-  enemy = new Enemy(enemySprite, 50);
+  enemy = new Enemy(enemySprite, 5);
+  gameScreen = new GameScreen();
 }
 
 void draw() {
-  background(backgroundGame);
-
-  if (gameTime % 60 == 0) {
-    addEnemy(enemySprite, 10);
+  switch(activeScreen) {
+    case "aboutScreen":
+      break;
+    case "gameScreen":
+      gameScreen.display();
+      break;
+    case "initialScreen":
+      break;
+    case "instructionsScreen":
+      break;
+    case "selectionItenScreen":
+      break;
+    default:
+    break;
   }
-
-  for (Enemy ene: enemys) {
-    if ((ene.enemyPos.x + 25 >= playerPos1.x && ene.enemyPos.x - 25 <= playerPos2.x) &&
-      (ene.enemyPos.y + 25 >= playerPos1.y && ene.enemyPos.y - 25 <= playerPos2.y)) {
-      if (playerDamageTime == 0) {
-        if (playerLife > 0) {
-          if (playerLife == 6) {
-            playerLife--;
-          } else if (playerLife == 5) {
-            playerLife--;
-          } else if (playerLife == 4) {
-            playerLife--;
-          } else if (playerLife == 3) {
-            playerLife--;
-          } else if (playerLife == 2) {
-            playerLife--;
-          } else if (playerLife == 1) {
-            playerLife--;
-          }
-        }
-        playerDamageTime = 20;
-      } else {
-        playerDamageTime--;
-      }
-
-      println("**************** alien " + ene.enemyId + " te atacou");
-    }
-    ene.script(targetPlayerPos);
-    if (enemyDamageTime == 0) {
-      enemyDamageTime = 10;
-    } else {
-      enemyDamageTime--;
-    }
-  }
-
-  spaceship.display();
-  spaceship.drive();
-  gameTime++;
+  
+  println("score enemies: " + scoreEnemies);
 }
 
 void addEnemy(PImage img, int lf) {
@@ -86,26 +93,87 @@ void addEnemy(PImage img, int lf) {
   enemyCount++;
 }
 
+void addBullets() {
+  bulletSpd.set(mouseX, mouseY, 0);
+  bulletSpd.sub(targetPlayerPos.x, targetPlayerPos.y);
+  
+  if (selectedSpaceship == 1) {
+    bulletSpd.setMag(10);
+  } else if (selectedSpaceship == 2) {
+    bulletSpd.setMag(10);
+  } else if (selectedSpaceship == 3) {
+    bulletSpd.setMag(10);
+  }
+  
+  bullets.add(new Bullet(targetPlayerPos, bulletSpd, gunDamage));
+}
+
+void updateBullets() {
+  fill(Bullet.COLOUR);
+  
+  for (int b = bullets.size() - 1; b >= 0; b--) {
+    Bullet bul = bullets.get(b);
+    
+    if (bul.script()) {
+      bulletPool.add(b);
+    }
+    
+    for (int e = enemys.size() - 1; e >= 0; e--) {
+      Enemy d = enemys.get(e);
+      
+      if (bul.pos.x >= d.enemyPos1.x && bul.pos.x <= d.enemyPos2.x && 
+        bul.pos.y >= d.enemyPos1.y && bul.pos.y <= d.enemyPos2.y) {
+        
+        d.enemyLife -= bul.gunDamage;
+        bullets.remove(b);
+        
+        if (d.enemyLife <= 0) {
+          scoreEnemies++;
+          enemys.remove(e);
+        }
+        
+        break;
+      }
+    }
+  }
+}
+
+void newGame() {
+  enemys.clear();
+  
+  gameTime = 0;
+  scoreEnemies = 0;
+  playerLife = 6;
+}
+
+void mousePressed() {
+  addBullets();
+}
+
 void keyPressed() {
-  if (keyCode == 'W' || keyCode == 'w') {
+  char keyChar = Character.toUpperCase(key);
+  if (keyChar == 'W') {
     wPressed = true;
-  } else if (keyCode == 'S' || keyCode == 's') {
+  } else if (keyChar == 'S') {
     sPressed = true;
-  } else if (keyCode == 'D' || keyCode == 'd') {
+  } else if (keyChar == 'D') {
     dPressed = true;
-  } else if (keyCode == 'A' || keyCode == 'a') {
+  } else if (keyChar == 'A') {
     aPressed = true;
+  } else if (keyChar == 'R') {
+    newGame();
   }
 }
 
 void keyReleased() {
-  if (keyCode == 'W' || keyCode == 'w') {
+  char keyChar = Character.toUpperCase(key);
+  if (keyChar == 'W') {
     wPressed = false;
-  } else if (keyCode == 'S' || keyCode == 's') {
+  } else if (keyChar == 'S') {
     sPressed = false;
-  } else if (keyCode == 'D' || keyCode == 'd') {
+  } else if (keyChar == 'D') {
     dPressed = false;
-  } else if (keyCode == 'A' || keyCode == 'a') {
+  } else if (keyChar == 'A') {
     aPressed = false;
   }
 }
