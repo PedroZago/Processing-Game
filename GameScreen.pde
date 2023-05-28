@@ -50,7 +50,7 @@ class GameScreen extends Screen {
     } else {
       playerDamageTime = max(0, playerDamageTime - 1);
     }
-    //println("**************** alien " + ene.enemyId + " te atacou");
+    println("**************** alien " + ene.enemyId + " te atacou");
   }
   
   void updateGameTime() {
