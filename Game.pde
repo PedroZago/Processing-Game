@@ -14,11 +14,12 @@ Spaceship spaceship;
 Enemy enemy;
 
 // Instancias das telas
-AboutScreen aboutScreen;
+CreditScreen creditScreen;
 GameScreen gameScreen;
 InitialScreen initialScreen;
-InstructionsScreen instructionsScreen;
+StoryScreen storyScreen;
 SelectionItensScreen selectionItensScreen;
+ControllersScreen controllersScreen;
 
 // Tipos inteiros
 int gameTime = 0;
@@ -31,6 +32,7 @@ int dificuldade = 0;
 int enemyCount = 0;
 int scoreEnemies = 0;
 int selectedSpaceship = 1;
+int spaceShipSelected = 1;
 
 // Tipos PFont
 PFont customFont;
@@ -63,11 +65,13 @@ PImage backgroundGame;
 PImage backgroundInitialScreen;
 PImage enemySprite;
 PImage playerSprite;
+PImage cursor;
+PImage keyboardController;
+PImage mouseController;
 
 // Tipos String
 String activeScreen = "initialScreen";
 String historiaText = "Em um universo distante, a paz do espaço sideral é abalada por uma tempestade de meteoros mortais. Como comandante da nave estelar \"Aurora\", você assume a missão de proteger a Terra e suas colônias espaciais. Através de combates emocionantes, sua coragem será testada enquanto luta para preservar a esperança da humanidade contra a iminente destruição cósmica.";
-String tituHistoriaText = "História";
 String creditosText = "Desenvolvido por: \nAna Flavia\nGabriel de Assis\nPedro de Camargo";
 
 // Tipos short
@@ -82,30 +86,39 @@ void setup() {
   backgroundInitialScreen = loadImage("./assets/bg_initialScreen.png");
   backgroundInitialScreen.resize(800, 600);
 
-  playerSprite = loadImage("./assets/spaceship.png");
+  selectedSpaceship();
   enemySprite = loadImage("./assets/enemy.png");
+  cursor = loadImage("./assets/scope.png");
+  
+  keyboardController = loadImage("./assets/keyboard.png");
+  mouseController = loadImage("./assets/mouse.png");
 
   customFont = createFont("./assets/thunderstrikelaser.ttf", 70);
   textAlign(CENTER, CENTER);
   textLeading(30);
 
   musicMenu = new SoundFile(this, "./assets/musicGame.mp3");
-  musicMenu.loop();
+  //musicMenu.loop();
 
   spaceship = new Spaceship(playerSprite, 5);
   enemy = new Enemy(enemySprite, 5);
 
   gameScreen = new GameScreen();
   initialScreen = new InitialScreen();
-  aboutScreen = new AboutScreen();
-  instructionsScreen = new InstructionsScreen();
+  creditScreen = new CreditScreen();
+  storyScreen = new StoryScreen();
   selectionItensScreen = new SelectionItensScreen();
+  controllersScreen = new ControllersScreen();
+
+  cursor(cursor);
 }
 
 void draw() {
+  cursor(cursor);
+
   switch (activeScreen) {
-  case "aboutScreen":
-    aboutScreen.display();
+  case "creditScreen":
+    creditScreen.display();
     break;
   case "gameScreen":
     gameScreen.display();
@@ -113,11 +126,14 @@ void draw() {
   case "initialScreen":
     initialScreen.display();
     break;
-  case "instructionsScreen":
-    instructionsScreen.display();
+  case "storyScreen":
+    storyScreen.display();
     break;
   case "selectionItenScreen":
     selectionItensScreen.display();
+    break;
+  case "controllersScreen":
+    controllersScreen.display();
     break;
   default:
     break;
@@ -142,6 +158,19 @@ void addBullets() {
   }
 
   bullets.add(new Bullet(targetPlayerPos, bulletSpd, gunDamage));
+}
+
+void selectedSpaceship() {
+  if (spaceShipSelected == 1) {
+    playerSprite = loadImage("./assets/spaceship.png");
+    gunDamage = 10;
+  } else if (spaceShipSelected == 2) {
+    playerSprite = loadImage("./assets/spaceship.png");
+    gunDamage = 10;
+  } else if (spaceShipSelected == 3) {
+    playerSprite = loadImage("./assets/spaceship.png");
+    gunDamage = 10;
+  }
 }
 
 void updateBullets() {
@@ -205,14 +234,16 @@ void mousePressed() {
   addBullets();
 
   if (activeScreen.equals("initialScreen")) {
-    if (checkButtonPress(width / 2, height / 2 - 50, "selectionItenScreen")) {
-      activeScreen = "selectionItenScreen"; // Mudar para a tela de selecionar item
-    } else if (checkButtonPress(width / 2, height / 2 + 50, "aboutScreen")) {
-      activeScreen = "aboutScreen"; // Mudar para a tela de créditos
-    } else if (checkButtonPress(width / 2, height / 2 + 150, "instructionsScreen")) {
-      activeScreen = "instructionsScreen"; // Mudar para a tela de história
+    if (checkButtonPress(width / 2, height / 2 - 100, "selectionItenScreen")) {
+      activeScreen = "gameScreen"; // Mudar para a tela de selecionar item
+    } else if (checkButtonPress(width / 2, height / 2, "creditScreen")) {
+      activeScreen = "creditScreen"; // Mudar para a tela de créditos
+    } else if (checkButtonPress(width / 2, height / 2 + 100, "storyScreen")) {
+      activeScreen = "storyScreen"; // Mudar para a tela de história
+    } else if (checkButtonPress(width / 2, height / 2 + 200, "controllersScreen")) {
+      activeScreen = "controllersScreen"; // Mudar para a tela de controles
     }
-  } else if (activeScreen.equals("instructionsScreen") || activeScreen.equals("aboutScreen") || activeScreen.equals("selectionItenScreen")) {
+  } else if (activeScreen.equals("storyScreen") || activeScreen.equals("creditScreen") || activeScreen.equals("selectionItenScreen") || activeScreen.equals("controllersScreen")) {
     if (checkButtonPress(width / 2, height - 50, "initialScreen")) {
       activeScreen = "initialScreen"; // Mudar para a tela de menu
     }
