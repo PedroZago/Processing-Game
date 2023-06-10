@@ -18,13 +18,12 @@ class Enemy {
   PVector randomPos = posArray[parseInt(random(0, 4))];
   PVector enemyPos = new PVector(randomPos.x, randomPos.y);
   
-  PImage enemyImage;
-  
+  PImage randomSprite = random(2) < 1 ? enemySprite : asteroidSprite;
+    
   int enemyLife;
   int enemyId = enemyCount;
   
-  Enemy(PImage tempImage, int tempLife) {
-    enemyImage = tempImage;
+  Enemy(int tempLife) {
     enemyLife = tempLife;
   }
   
@@ -57,7 +56,7 @@ class Enemy {
     pushMatrix();
     translate(enemyPos.x, enemyPos.y);
     rotate(vel.heading() + HALF_PI);
-    image(enemyImage, -15, -15);
+    image(randomSprite, -15, -15);
     popMatrix();
     
     stroke(255, 0, 255);
