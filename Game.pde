@@ -25,7 +25,7 @@ ControllersScreen controllersScreen;
 int gameTime = 0;
 int playerDamageTime = 20;
 int enemyDamageTime = 0;
-int playerLife = 6;
+int playerLife = 3;
 int backgroundGameX = 0;
 int backgroundGameX2 = 1280;
 int dificuldade = 0;
@@ -68,9 +68,12 @@ PImage playerSprite;
 PImage cursor;
 PImage keyboardController;
 PImage mouseController;
+PImage life1;
+PImage life2;
+PImage life3;
 
 // Tipos String
-String activeScreen = "initialScreen";
+String activeScreen = "gameScreen";
 String historiaText = "Em um universo distante, a paz do espaço sideral é abalada por uma tempestade de meteoros mortais. Como comandante da nave estelar \"Aurora\", você assume a missão de proteger a Terra e suas colônias espaciais. Através de combates emocionantes, sua coragem será testada enquanto luta para preservar a esperança da humanidade contra a iminente destruição cósmica.";
 String creditosText = "Desenvolvido por: \nAna Flavia\nGabriel de Assis\nPedro de Camargo";
 
@@ -92,6 +95,10 @@ void setup() {
   
   keyboardController = loadImage("./assets/keyboard.png");
   mouseController = loadImage("./assets/mouse.png");
+  
+  life1 = loadImage("./assets/full_life.png");
+  life2 = loadImage("./assets/full_life.png");
+  life3 = loadImage("./assets/full_life.png");
 
   customFont = createFont("./assets/thunderstrikelaser.ttf", 70);
   textAlign(CENTER, CENTER);
