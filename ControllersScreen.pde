@@ -23,7 +23,7 @@ class ControllersScreen extends Screen {
     
     fill(200, 200, 200);
     textSize(20);
-    text("Movimento", boxX + 240, boxY + 280, boxWidth - 250, boxHeight - 40);
+    text("Movimentar", boxX + 240, boxY + 280, boxWidth - 250, boxHeight - 40);
     
     fill(200, 200, 200);
     rect(boxX + 460, boxY + 180, keyboardController.width, keyboardController.height, 20);

@@ -25,7 +25,7 @@ ControllersScreen controllersScreen;
 int gameTime = 0;
 int playerDamageTime = 20;
 int enemyDamageTime = 0;
-int playerLife = 6;
+int playerLife = 0;
 int backgroundGameX = 0;
 int backgroundGameX2 = 1280;
 int dificuldade = 0;
@@ -39,7 +39,7 @@ PFont customFont;
 
 // Tipos Float
 float buttonWidth = 200;
-float buttonHeight = 50;
+float buttonHeight = 60;
 float defaultButtonSize = 1.0; // Tamanho inicial do botão
 float hoverButtonSize = 1.2; // Tamanho do botão quando o cursor estiver sobre ele
 
@@ -64,13 +64,17 @@ PVector playerPos2 = new PVector();
 PImage backgroundGame;
 PImage backgroundInitialScreen;
 PImage enemySprite;
+PImage asteroidSprite;
 PImage playerSprite;
 PImage cursor;
 PImage keyboardController;
 PImage mouseController;
+PImage life1;
+PImage life2;
+PImage life3;
 
 // Tipos String
-String activeScreen = "initialScreen";
+String activeScreen = "gameScreen";
 String historiaText = "Em um universo distante, a paz do espaço sideral é abalada por uma tempestade de meteoros mortais. Como comandante da nave estelar \"Aurora\", você assume a missão de proteger a Terra e suas colônias espaciais. Através de combates emocionantes, sua coragem será testada enquanto luta para preservar a esperança da humanidade contra a iminente destruição cósmica.";
 String creditosText = "Desenvolvido por: \nAna Flavia\nGabriel de Assis\nPedro de Camargo";
 
@@ -82,16 +86,21 @@ void setup() {
   size(800, 600);
 
   backgroundGame = loadImage("./assets/bg_game.png");
-  backgroundGame.resize(1285, 720);
+  backgroundGame.resize(1280, 720);
   backgroundInitialScreen = loadImage("./assets/bg_initialScreen.png");
   backgroundInitialScreen.resize(800, 600);
 
   selectedSpaceship();
   enemySprite = loadImage("./assets/enemy.png");
+  asteroidSprite = loadImage("./assets/asteroid.png");
   cursor = loadImage("./assets/scope.png");
   
   keyboardController = loadImage("./assets/keyboard.png");
   mouseController = loadImage("./assets/mouse.png");
+  
+  life1 = loadImage("./assets/full_life.png");
+  life2 = loadImage("./assets/full_life.png");
+  life3 = loadImage("./assets/full_life.png");
 
   customFont = createFont("./assets/thunderstrikelaser.ttf", 70);
   textAlign(CENTER, CENTER);
@@ -99,9 +108,9 @@ void setup() {
 
   musicMenu = new SoundFile(this, "./assets/musicGame.mp3");
   //musicMenu.loop();
-
+  
   spaceship = new Spaceship(playerSprite, 5);
-  enemy = new Enemy(enemySprite, 5);
+  enemy = new Enemy(5);
 
   gameScreen = new GameScreen();
   initialScreen = new InitialScreen();
@@ -140,8 +149,8 @@ void draw() {
   }
 }
 
-void addEnemy(PImage img, int lf) {
-  enemys.add(new Enemy(img, lf));
+void addEnemy(int lf) {
+  enemys.add(new Enemy(lf));
   enemyCount++;
 }
 
@@ -208,7 +217,11 @@ void newGame() {
 
   gameTime = 0;
   scoreEnemies = 0;
-  playerLife = 6;
+  playerLife = 3;
+  
+  life1 = loadImage("./assets/full_life.png");
+  life2 = loadImage("./assets/full_life.png");
+  life3 = loadImage("./assets/full_life.png");
 }
 
 void drawButton(float x, float y, String label) {
@@ -231,8 +244,6 @@ void drawButton(float x, float y, String label) {
 }
 
 void mousePressed() {
-  addBullets();
-
   if (activeScreen.equals("initialScreen")) {
     if (checkButtonPress(width / 2, height / 2 - 100, "selectionItenScreen")) {
       activeScreen = "gameScreen"; // Mudar para a tela de selecionar item
@@ -246,6 +257,16 @@ void mousePressed() {
   } else if (activeScreen.equals("storyScreen") || activeScreen.equals("creditScreen") || activeScreen.equals("selectionItenScreen") || activeScreen.equals("controllersScreen")) {
     if (checkButtonPress(width / 2, height - 50, "initialScreen")) {
       activeScreen = "initialScreen"; // Mudar para a tela de menu
+    }
+  } else if (activeScreen.equals("gameScreen")) {
+    if (playerLife == 0) {
+      if (checkButtonPress(width / 2, height / 2, "selectionItenScreen")) {
+        newGame();
+      } else if (checkButtonPress(width / 2, height / 2 + 100, "creditScreen")) {
+        activeScreen = "initialScreen"; // Mudar para a tela de créditos
+      }
+    } else {
+      addBullets();
     }
   }
 }
@@ -268,8 +289,6 @@ void keyPressed() {
     dPressed = true;
   } else if (keyChar == 'A') {
     aPressed = true;
-  } else if (keyChar == 'R') {
-    newGame();
   }
 }
 
