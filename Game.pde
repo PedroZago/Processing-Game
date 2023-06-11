@@ -78,7 +78,7 @@ PImage spaceship3;
 PImage spaceship4;
 
 // Tipos String
-String activeScreen = "initialScreen";
+String activeScreen = "selectionItenScreen";
 String historiaText = "Em um universo distante, a paz do espaço sideral é abalada por uma tempestade de meteoros mortais. Como comandante da nave estelar \"Aurora\", você assume a missão de proteger a Terra e suas colônias espaciais. Através de combates emocionantes, sua coragem será testada enquanto luta para preservar a esperança da humanidade contra a iminente destruição cósmica.";
 String creditosText = "Desenvolvido por: \nAna Flavia\nGabriel de Assis\nPedro de Camargo";
 
@@ -266,6 +266,7 @@ void mousePressed() {
         newGame();
       } else if (checkButtonPress(width / 2, height / 2 + 100)) {
         musicGame.stop();
+        musicMenu.loop();
         activeScreen = "initialScreen";
       }
     } else {

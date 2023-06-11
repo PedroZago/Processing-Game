@@ -102,8 +102,6 @@ class GameScreen {
     } else {
       playerDamageTime--;
     }
-    
-    println("**************** alien " + ene.enemyId + " te atacou");
   }
   
   void updateGameTime() {
