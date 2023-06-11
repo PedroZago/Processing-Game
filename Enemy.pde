@@ -9,7 +9,7 @@ class Enemy {
       new PVector(random(width), 0)
     };
   
-  final PVector vel = new PVector(random( - 2, 2), random( - 2, 2));
+  final PVector vel = new PVector(random( -2, 2), random( -2, 2));
   final PVector acc = new PVector();
   
   PVector enemyPos1 = new PVector();
@@ -19,7 +19,7 @@ class Enemy {
   PVector enemyPos = new PVector(randomPos.x, randomPos.y);
   
   PImage randomSprite = random(2) < 1 ? enemySprite : asteroidSprite;
-    
+  
   int enemyLife;
   int enemyId = enemyCount;
   

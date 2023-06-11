@@ -1,10 +1,10 @@
-class ControllersScreen extends Screen {
+class ControllersScreen {
   ControllersScreen() {
     super();
   }
   
   void display() {
-   float boxWidth = 700;
+    float boxWidth = 700;
     float boxHeight = 500;
     float boxX = width / 2 - boxWidth / 2;
     float boxY = height / 2 - boxHeight / 2;

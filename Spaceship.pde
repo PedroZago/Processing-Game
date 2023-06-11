@@ -7,10 +7,7 @@ class Spaceship {
   int initialPosX = width / 2;
   int initialPosY = height / 2;
   
-  PImage spaceshipImage;
-  
-  Spaceship(PImage tempImage, int tempMotionPixels) {
-    spaceshipImage = tempImage;
+  Spaceship(int tempMotionPixels) {
     motionPixels = tempMotionPixels;
   }
   
@@ -18,8 +15,8 @@ class Spaceship {
     pushMatrix();
     angleAim = atan2(spaceshipPos.x - mouseX, spaceshipPos.y - mouseY);
     translate(spaceshipPos.x, spaceshipPos.y);
-    rotate( -angleAim - HALF_PI);
-    image(spaceshipImage, 0, 0);
+    rotate( - angleAim - HALF_PI);
+    image(playerSprite, 0, 0);
     popMatrix();
   }
   
@@ -31,7 +28,7 @@ class Spaceship {
   
   void handleMotionInput() {
     if (aPressed && initialPosX > 0) {
-      initialPosX -= motionPixels;    
+      initialPosX -= motionPixels;
     }
     
     if (dPressed && initialPosX < width) {
@@ -39,11 +36,11 @@ class Spaceship {
     }
     
     if (wPressed && initialPosY > 0) {
-      initialPosY -= motionPixels;     
+      initialPosY -= motionPixels;
     }
     
     if (sPressed && initialPosY < height) {
-      initialPosY += motionPixels;     
+      initialPosY += motionPixels;
     }
   }
   

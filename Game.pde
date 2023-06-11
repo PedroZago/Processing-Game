@@ -32,7 +32,6 @@ int dificuldade = 0;
 int enemyCount = 0;
 int scoreEnemies = 0;
 int selectedSpaceship = 1;
-int spaceShipSelected = 1;
 
 // Tipos PFont
 PFont customFont;
@@ -40,8 +39,8 @@ PFont customFont;
 // Tipos Float
 float buttonWidth = 200;
 float buttonHeight = 60;
-float defaultButtonSize = 1.0; // Tamanho inicial do botão
-float hoverButtonSize = 1.2; // Tamanho do botão quando o cursor estiver sobre ele
+float defaultButtonSize = 1.0;
+float hoverButtonSize = 1.2;
 
 // Tipos booleanos
 boolean aPressed = false;
@@ -63,6 +62,7 @@ PVector playerPos2 = new PVector();
 // Tipos PImage
 PImage backgroundGame;
 PImage backgroundInitialScreen;
+PImage backgroundSelectionScreen;
 PImage enemySprite;
 PImage asteroidSprite;
 PImage playerSprite;
@@ -72,9 +72,13 @@ PImage mouseController;
 PImage life1;
 PImage life2;
 PImage life3;
+PImage spaceship1;
+PImage spaceship2;
+PImage spaceship3;
+PImage spaceship4;
 
 // Tipos String
-String activeScreen = "gameScreen";
+String activeScreen = "initialScreen";
 String historiaText = "Em um universo distante, a paz do espaço sideral é abalada por uma tempestade de meteoros mortais. Como comandante da nave estelar \"Aurora\", você assume a missão de proteger a Terra e suas colônias espaciais. Através de combates emocionantes, sua coragem será testada enquanto luta para preservar a esperança da humanidade contra a iminente destruição cósmica.";
 String creditosText = "Desenvolvido por: \nAna Flavia\nGabriel de Assis\nPedro de Camargo";
 
@@ -84,16 +88,20 @@ short gunDamage = 10;
 void setup() {
   frameRate(60);
   size(800, 600);
-
+  
   backgroundGame = loadImage("./assets/bg_game.png");
-  backgroundGame.resize(1280, 720);
+  backgroundGame.resize(8508, 720);
   backgroundInitialScreen = loadImage("./assets/bg_initialScreen.png");
   backgroundInitialScreen.resize(800, 600);
-
-  selectedSpaceship();
+  
   enemySprite = loadImage("./assets/enemy.png");
   asteroidSprite = loadImage("./assets/asteroid.png");
   cursor = loadImage("./assets/scope.png");
+  
+  spaceship1 = loadImage("./assets/spaceship1_.png");
+  spaceship2 = loadImage("./assets/spaceship2_.png");
+  spaceship3 = loadImage("./assets/spaceship3_.png");
+  spaceship4 = loadImage("./assets/spaceship4_.png");
   
   keyboardController = loadImage("./assets/keyboard.png");
   mouseController = loadImage("./assets/mouse.png");
@@ -101,50 +109,51 @@ void setup() {
   life1 = loadImage("./assets/full_life.png");
   life2 = loadImage("./assets/full_life.png");
   life3 = loadImage("./assets/full_life.png");
-
+  
   customFont = createFont("./assets/thunderstrikelaser.ttf", 70);
   textAlign(CENTER, CENTER);
   textLeading(30);
-
-  musicMenu = new SoundFile(this, "./assets/musicGame.mp3");
-  //musicMenu.loop();
   
-  spaceship = new Spaceship(playerSprite, 5);
-  enemy = new Enemy(5);
-
+  musicMenu = new SoundFile(this, "./assets/musicMenu.mp3");
+  musicGame = new SoundFile(this, "./assets/musicGame.mp3");
+  musicMenu.loop();
+  
+  spaceship = new Spaceship(5);
+  enemy = new Enemy(15);
+  
   gameScreen = new GameScreen();
   initialScreen = new InitialScreen();
   creditScreen = new CreditScreen();
   storyScreen = new StoryScreen();
   selectionItensScreen = new SelectionItensScreen();
   controllersScreen = new ControllersScreen();
-
+  
   cursor(cursor);
 }
 
 void draw() {
   cursor(cursor);
-
-  switch (activeScreen) {
-  case "creditScreen":
-    creditScreen.display();
-    break;
-  case "gameScreen":
-    gameScreen.display();
-    break;
-  case "initialScreen":
-    initialScreen.display();
-    break;
-  case "storyScreen":
-    storyScreen.display();
-    break;
-  case "selectionItenScreen":
-    selectionItensScreen.display();
-    break;
-  case "controllersScreen":
-    controllersScreen.display();
-    break;
-  default:
+  
+  switch(activeScreen) {
+    case "creditScreen":
+      creditScreen.display();
+      break;
+    case "gameScreen":
+      gameScreen.display();
+      break;
+    case "initialScreen":
+      initialScreen.display();
+      break;
+    case "storyScreen":
+      storyScreen.display();
+      break;
+    case "selectionItenScreen":
+      selectionItensScreen.display();
+      break;
+    case "controllersScreen":
+      controllersScreen.display();
+      break;
+    default:
     break;
   }
 }
@@ -157,7 +166,7 @@ void addEnemy(int lf) {
 void addBullets() {
   bulletSpd.set(mouseX, mouseY, 0);
   bulletSpd.sub(targetPlayerPos.x, targetPlayerPos.y);
-
+  
   if (selectedSpaceship == 1) {
     bulletSpd.setMag(10);
   } else if (selectedSpaceship == 2) {
@@ -165,47 +174,34 @@ void addBullets() {
   } else if (selectedSpaceship == 3) {
     bulletSpd.setMag(10);
   }
-
+  
   bullets.add(new Bullet(targetPlayerPos, bulletSpd, gunDamage));
-}
-
-void selectedSpaceship() {
-  if (spaceShipSelected == 1) {
-    playerSprite = loadImage("./assets/spaceship.png");
-    gunDamage = 10;
-  } else if (spaceShipSelected == 2) {
-    playerSprite = loadImage("./assets/spaceship.png");
-    gunDamage = 10;
-  } else if (spaceShipSelected == 3) {
-    playerSprite = loadImage("./assets/spaceship.png");
-    gunDamage = 10;
-  }
 }
 
 void updateBullets() {
   fill(Bullet.COLOUR);
-
+  
   for (int b = bullets.size() - 1; b >= 0; b--) {
     Bullet bul = bullets.get(b);
-
+    
     if (bul.script()) {
       bulletPool.add(b);
     }
-
+    
     for (int e = enemys.size() - 1; e >= 0; e--) {
       Enemy d = enemys.get(e);
-
-      if (bul.pos.x >= d.enemyPos1.x && bul.pos.x <= d.enemyPos2.x &&
+      
+      if (bul.pos.x >= d.enemyPos1.x && bul.pos.x <= d.enemyPos2.x && 
         bul.pos.y >= d.enemyPos1.y && bul.pos.y <= d.enemyPos2.y) {
-
+        
         d.enemyLife -= bul.gunDamage;
         bullets.remove(b);
-
+        
         if (d.enemyLife <= 0) {
           scoreEnemies++;
           enemys.remove(e);
         }
-
+        
         break;
       }
     }
@@ -214,10 +210,16 @@ void updateBullets() {
 
 void newGame() {
   enemys.clear();
-
+  
   gameTime = 0;
   scoreEnemies = 0;
   playerLife = 3;
+  
+  musicMenu.stop();
+  musicGame.loop();
+  
+  backgroundGameX = 0;
+  backgroundGameX2 = 1280;
   
   life1 = loadImage("./assets/full_life.png");
   life2 = loadImage("./assets/full_life.png");
@@ -227,16 +229,16 @@ void newGame() {
 void drawButton(float x, float y, String label) {
   float buttonX = x - buttonWidth / 2;
   float buttonY = y - buttonHeight / 2;
-
+  
   boolean isHovered = mouseX > buttonX && mouseX < buttonX + buttonWidth && mouseY > buttonY && mouseY < buttonY + buttonHeight;
-
+  
   float buttonSize = isHovered ? hoverButtonSize : defaultButtonSize;
-
+  
   stroke(255, 255, 0);
   fill(0);
   rectMode(CENTER);
   rect(x, y, buttonWidth * buttonSize, buttonHeight * buttonSize);
-
+  
   fill(255);
   textSize(20);
   textAlign(CENTER, CENTER);
@@ -245,25 +247,27 @@ void drawButton(float x, float y, String label) {
 
 void mousePressed() {
   if (activeScreen.equals("initialScreen")) {
-    if (checkButtonPress(width / 2, height / 2 - 100, "selectionItenScreen")) {
-      activeScreen = "gameScreen"; // Mudar para a tela de selecionar item
-    } else if (checkButtonPress(width / 2, height / 2, "creditScreen")) {
-      activeScreen = "creditScreen"; // Mudar para a tela de créditos
-    } else if (checkButtonPress(width / 2, height / 2 + 100, "storyScreen")) {
-      activeScreen = "storyScreen"; // Mudar para a tela de história
-    } else if (checkButtonPress(width / 2, height / 2 + 200, "controllersScreen")) {
-      activeScreen = "controllersScreen"; // Mudar para a tela de controles
+    if (checkButtonPress(width / 2, height / 2 - 100)) {
+      activeScreen = "selectionItenScreen";
+    } else if (checkButtonPress(width / 2, height / 2)) {
+      activeScreen = "creditScreen";
+    } else if (checkButtonPress(width / 2, height / 2 + 100)) {
+      activeScreen = "storyScreen";
+    } else if (checkButtonPress(width / 2, height / 2 + 200)) {
+      activeScreen = "controllersScreen";
     }
   } else if (activeScreen.equals("storyScreen") || activeScreen.equals("creditScreen") || activeScreen.equals("selectionItenScreen") || activeScreen.equals("controllersScreen")) {
-    if (checkButtonPress(width / 2, height - 50, "initialScreen")) {
-      activeScreen = "initialScreen"; // Mudar para a tela de menu
+    if (checkButtonPress(width / 2, height - 50)) {
+      activeScreen = "initialScreen";
     }
   } else if (activeScreen.equals("gameScreen")) {
     if (playerLife == 0) {
-      if (checkButtonPress(width / 2, height / 2, "selectionItenScreen")) {
+      if (checkButtonPress(width / 2, height / 2)) {
         newGame();
-      } else if (checkButtonPress(width / 2, height / 2 + 100, "creditScreen")) {
-        activeScreen = "initialScreen"; // Mudar para a tela de créditos
+      } else if (checkButtonPress(width / 2, height / 2 + 100)) {
+        musicGame.stop();
+        musicMenu.loop();
+        activeScreen = "initialScreen";
       }
     } else {
       addBullets();
@@ -271,9 +275,8 @@ void mousePressed() {
   }
 }
 
-boolean checkButtonPress(float x, float y, String message) {
+boolean checkButtonPress(float x, float y) {
   if (mouseX > x - buttonWidth / 2 && mouseX < x + buttonWidth / 2 && mouseY > y - buttonHeight / 2 && mouseY < y + buttonHeight / 2) {
-    println(message);
     return true;
   }
   return false;

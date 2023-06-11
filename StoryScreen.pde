@@ -1,4 +1,4 @@
-class StoryScreen extends Screen {
+class StoryScreen {
   StoryScreen() {
     super();
   }
