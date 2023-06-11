@@ -4,6 +4,8 @@ class GameScreen extends Screen {
   }
 
   void display() {
+    imageMode(CORNER);
+    
     image(backgroundGame, 0, 0);
     if (playerLife == 0) {
        textFont(customFont);

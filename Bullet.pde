@@ -1,8 +1,6 @@
 class Bullet {
-  static final int DIM = 4;
-  static final color COLOUR = #0000FF; 
-
-  
+  static final int DIM = 7;
+  static final color COLOUR = #ff0000; 
 
   final PVector pos = new PVector();
   final PVector spd = new PVector();

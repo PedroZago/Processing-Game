@@ -6,7 +6,7 @@ class SelectionItensScreen extends Screen {
   }
 
   void display() {
-    background(backgroundSelectionScreen);
+    background(backgroundInitialScreen);
     textAlign(CENTER, TOP);
     textSize(30);
     fill(255);
@@ -37,8 +37,23 @@ class SelectionItensScreen extends Screen {
     image(buttonImage, x + imageSize / 2, y + imageSize / 2, imageSize * buttonSize, imageSize * buttonSize);
 
     if (isTouched && mousePressed) {
-      selectedSpaceship = buttonId;
-      println("Item selecionado: " + selectedSpaceship);
+      newGame();
+
+      if (buttonId == 1) {
+        playerSprite = loadImage("./assets/spaceship1.png");
+        gunDamage = 8;
+      } else if (buttonId == 2) {
+        playerSprite = loadImage("./assets/spaceship2.png");
+        gunDamage = 10;
+      } else if (buttonId == 3) {
+        playerSprite = loadImage("./assets/spaceship3.png");
+        gunDamage = 12;
+      } else if (buttonId == 4) {
+        playerSprite = loadImage("./assets/spaceship4.png");
+        gunDamage = 14;
+      }
+      
+      activeScreen = "gameScreen";
     }
   }
 }

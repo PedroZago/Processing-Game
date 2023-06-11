@@ -6,11 +6,8 @@ class Spaceship {
   int motionPixels;
   int initialPosX = width / 2;
   int initialPosY = height / 2;
-  
-  PImage spaceshipImage;
-  
-  Spaceship(PImage tempImage, int tempMotionPixels) {
-    spaceshipImage = tempImage;
+    
+  Spaceship(int tempMotionPixels) {
     motionPixels = tempMotionPixels;
   }
   
@@ -19,7 +16,7 @@ class Spaceship {
     angleAim = atan2(spaceshipPos.x - mouseX, spaceshipPos.y - mouseY);
     translate(spaceshipPos.x, spaceshipPos.y);
     rotate( -angleAim - HALF_PI);
-    image(spaceshipImage, 0, 0);
+    image(playerSprite, 0, 0);
     popMatrix();
   }
   
