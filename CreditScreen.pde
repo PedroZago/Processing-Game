@@ -1,4 +1,4 @@
-class CreditScreen extends Screen {
+class CreditScreen {
   CreditScreen() {
     super();
   }
