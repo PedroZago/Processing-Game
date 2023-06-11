@@ -90,7 +90,7 @@ void setup() {
   size(800, 600);
   
   backgroundGame = loadImage("./assets/bg_game.png");
-  backgroundGame.resize(1280, 720);
+  backgroundGame.resize(8508, 720);
   backgroundInitialScreen = loadImage("./assets/bg_initialScreen.png");
   backgroundInitialScreen.resize(800, 600);
   
