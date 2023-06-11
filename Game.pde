@@ -63,6 +63,7 @@ PVector playerPos2 = new PVector();
 // Tipos PImage
 PImage backgroundGame;
 PImage backgroundInitialScreen;
+PImage backgroundSelectionScreen;
 PImage enemySprite;
 PImage asteroidSprite;
 PImage playerSprite;
@@ -72,9 +73,13 @@ PImage mouseController;
 PImage life1;
 PImage life2;
 PImage life3;
+PImage spaceship1;
+PImage spaceship2;
+PImage spaceship3;
+PImage spaceship4;
 
 // Tipos String
-String activeScreen = "gameScreen";
+String activeScreen = "initialScreen";
 String historiaText = "Em um universo distante, a paz do espaço sideral é abalada por uma tempestade de meteoros mortais. Como comandante da nave estelar \"Aurora\", você assume a missão de proteger a Terra e suas colônias espaciais. Através de combates emocionantes, sua coragem será testada enquanto luta para preservar a esperança da humanidade contra a iminente destruição cósmica.";
 String creditosText = "Desenvolvido por: \nAna Flavia\nGabriel de Assis\nPedro de Camargo";
 
@@ -89,11 +94,18 @@ void setup() {
   backgroundGame.resize(1280, 720);
   backgroundInitialScreen = loadImage("./assets/bg_initialScreen.png");
   backgroundInitialScreen.resize(800, 600);
+  backgroundSelectionScreen = loadImage("./assets/bg_selectionScreen.png");
+  backgroundSelectionScreen.resize(800, 600);
 
   selectedSpaceship();
   enemySprite = loadImage("./assets/enemy.png");
   asteroidSprite = loadImage("./assets/asteroid.png");
   cursor = loadImage("./assets/scope.png");
+  
+  spaceship1 = loadImage("./assets/spaceship1.png");
+  spaceship2 = loadImage("./assets/spaceship2.png");
+  spaceship3 = loadImage("./assets/spaceship3.png");
+  spaceship4 = loadImage("./assets/spaceship4.png");
   
   keyboardController = loadImage("./assets/keyboard.png");
   mouseController = loadImage("./assets/mouse.png");
@@ -171,14 +183,17 @@ void addBullets() {
 
 void selectedSpaceship() {
   if (spaceShipSelected == 1) {
-    playerSprite = loadImage("./assets/spaceship.png");
-    gunDamage = 10;
+    playerSprite = loadImage("./assets/spaceship1.png");
+    gunDamage = 8;
   } else if (spaceShipSelected == 2) {
-    playerSprite = loadImage("./assets/spaceship.png");
+    playerSprite = loadImage("./assets/spaceship2.png");
     gunDamage = 10;
   } else if (spaceShipSelected == 3) {
-    playerSprite = loadImage("./assets/spaceship.png");
-    gunDamage = 10;
+    playerSprite = loadImage("./assets/spaceship3.png");
+    gunDamage = 12;
+  } else if (spaceShipSelected == 3) {
+    playerSprite = loadImage("./assets/spaceship4.png");
+    gunDamage = 14;
   }
 }
 
@@ -246,7 +261,7 @@ void drawButton(float x, float y, String label) {
 void mousePressed() {
   if (activeScreen.equals("initialScreen")) {
     if (checkButtonPress(width / 2, height / 2 - 100, "selectionItenScreen")) {
-      activeScreen = "gameScreen"; // Mudar para a tela de selecionar item
+      activeScreen = "selectionItenScreen"; // Mudar para a tela de selecionar item
     } else if (checkButtonPress(width / 2, height / 2, "creditScreen")) {
       activeScreen = "creditScreen"; // Mudar para a tela de créditos
     } else if (checkButtonPress(width / 2, height / 2 + 100, "storyScreen")) {
