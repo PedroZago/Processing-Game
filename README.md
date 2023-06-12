@@ -8,3 +8,4 @@ Engenharia de Computação 7° Semestre - Computação Gráfica e Processamento 
 - Pedro de Camargo Zago – RA: 001202002305
 
 ## Introdução
+Os jogos digitais têm se tornado uma forma popular de entretenimento e têm desempenhado um papel significativo na cultura contemporânea. O jogo desenvolvido é um jogo de nave espacial onde o jogador assume o papel de um comandante espacial encarregado de proteger a Terra e suas colônias de uma tempestade de meteoros mortais.
